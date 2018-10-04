@@ -93,6 +93,14 @@
 				<Link>\ABI\TypeConvertors\ABITypeToVBType.cs</Link>
 		</Compile>
 		
+        <Compile Include="..\Nethereum.Generators\AllMessages\AllMessagesGenerator.cs">
+				<Link>\AllMessages\AllMessagesGenerator.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\AllMessages\AllMessagesModel.cs">
+				<Link>\AllMessages\AllMessagesModel.cs</Link>
+		</Compile>
+		
         <Compile Include="..\Nethereum.Generators\Core\ClassFileTemplate.cs">
 				<Link>\Core\ClassFileTemplate.cs</Link>
 		</Compile>
@@ -121,12 +129,32 @@
 				<Link>\Core\CsharpClassFileTemplate.cs</Link>
 		</Compile>
 		
+        <Compile Include="..\Nethereum.Generators\Core\CSharpMultipleClassFileTemplate.cs">
+				<Link>\Core\CSharpMultipleClassFileTemplate.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\FileModel.cs">
+				<Link>\Core\FileModel.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\FileTemplate.cs">
+				<Link>\Core\FileTemplate.cs</Link>
+		</Compile>
+		
         <Compile Include="..\Nethereum.Generators\Core\FSharpClassFileTemplate.cs">
 				<Link>\Core\FSharpClassFileTemplate.cs</Link>
 		</Compile>
 		
+        <Compile Include="..\Nethereum.Generators\Core\FSharpMultipleClassFileTemplate.cs">
+				<Link>\Core\FSharpMultipleClassFileTemplate.cs</Link>
+		</Compile>
+		
         <Compile Include="..\Nethereum.Generators\Core\GeneratedFile.cs">
 				<Link>\Core\GeneratedFile.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\IClassGenerator.cs">
+				<Link>\Core\IClassGenerator.cs</Link>
 		</Compile>
 		
         <Compile Include="..\Nethereum.Generators\Core\IClassModel.cs">
@@ -155,6 +183,14 @@
 		
         <Compile Include="..\Nethereum.Generators\Core\MessageMap.cs">
 				<Link>\Core\MessageMap.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\MultipleClassFileTemplate.cs">
+				<Link>\Core\MultipleClassFileTemplate.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\MultipleClassGeneratorBase.cs">
+				<Link>\Core\MultipleClassGeneratorBase.cs</Link>
 		</Compile>
 		
         <Compile Include="..\Nethereum.Generators\Core\Parameter.cs">
@@ -199,6 +235,10 @@
 		
         <Compile Include="..\Nethereum.Generators\Core\VbClassFileTemplate.cs">
 				<Link>\Core\VbClassFileTemplate.cs</Link>
+		</Compile>
+		
+        <Compile Include="..\Nethereum.Generators\Core\VbMultipleClassFileTemplate.cs">
+				<Link>\Core\VbMultipleClassFileTemplate.cs</Link>
 		</Compile>
 		
         <Compile Include="..\Nethereum.Generators\CQS\ContractDeploymentCQSMessageGenerator.cs">
@@ -373,6 +413,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DuoCode.3.0.1654.0\build\DuoCode.targets'))" />
   </Target>
+ <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir) scripts\Nethereum.Generators.DuoCode.d.ts" "$(SolutionDir) src\Nethereum.Generators.JavaScript\" /Y /I 
+        xcopy "$(ProjectDir)scripts\Nethereum.Generators.DuoCode.js" "$(SolutionDir)src\Nethereum.Generators.JavaScript\" /Y /I 
+        xcopy "$(ProjectDir)scripts\Nethereum.Generators.DuoCode.js.map" "$(SolutionDir)src\Nethereum.Generators.JavaScript\" /Y /I</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

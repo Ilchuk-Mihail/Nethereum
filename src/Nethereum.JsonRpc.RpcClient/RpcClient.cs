@@ -38,49 +38,7 @@ namespace Nethereum.JsonRpc.Client
             CreateNewHttpClient();
         }
 
-        protected override async Task<T> SendInnerRequestAync<T>(RpcRequest request, string route = null)
-        {
-            var response =
-                await SendAsync(
-                        new RpcRequestMessage(request.Id, request.Method, request.RawParameters), route)
-                    .ConfigureAwait(false);
-            HandleRpcError(response);
-            return response.GetResult<T>();
-        }
-
-        protected override async Task<T> SendInnerRequestAync<T>(string method, string route = null,
-            params object[] paramList)
-        {
-            var request = new RpcRequestMessage(Guid.NewGuid().ToString(), method, paramList);
-            var response = await SendAsync(request, route).ConfigureAwait(false);
-            HandleRpcError(response);
-            return response.GetResult<T>();
-        }
-
-        private void HandleRpcError(RpcResponseMessage response)
-        {
-            if (response.HasError)
-                throw new RpcResponseException(new RpcError(response.Error.Code, response.Error.Message,
-                    response.Error.Data));
-        }
-
-        public override async Task SendRequestAsync(RpcRequest request, string route = null)
-        {
-            var response =
-                await SendAsync(
-                        new RpcRequestMessage(request.Id, request.Method, request.RawParameters), route)
-                    .ConfigureAwait(false);
-            HandleRpcError(response);
-        }
-
-        public override async Task SendRequestAsync(string method, string route = null, params object[] paramList)
-        {
-            var request = new RpcRequestMessage(Guid.NewGuid().ToString(), method, paramList);
-            var response = await SendAsync(request, route).ConfigureAwait(false);
-            HandleRpcError(response);
-        }
-
-        private async Task<RpcResponseMessage> SendAsync(RpcRequestMessage request, string route = null)
+        protected override async Task<RpcResponseMessage> SendAsync(RpcRequestMessage request, string route = null)
         {
             var logger = new RpcLogger(_log);
             try
@@ -89,7 +47,7 @@ namespace Nethereum.JsonRpc.Client
                 var rpcRequestJson = JsonConvert.SerializeObject(request, _jsonSerializerSettings);
                 var httpContent = new StringContent(rpcRequestJson, Encoding.UTF8, "application/json");
                 var cancellationTokenSource = new CancellationTokenSource();
-                cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(ConnectionTimeout));
+                cancellationTokenSource.CancelAfter(ConnectionTimeout);
 
                 logger.LogRequest(rpcRequestJson);
 
@@ -110,7 +68,7 @@ namespace Nethereum.JsonRpc.Client
             }
             catch(TaskCanceledException ex)
             {
-                throw new RpcClientTimeoutException($"Rpc timeout afer {ConnectionTimeout} milliseconds", ex);
+                throw new RpcClientTimeoutException($"Rpc timeout after {ConnectionTimeout.TotalMilliseconds} milliseconds", ex);
             }
             catch (Exception ex)
             {

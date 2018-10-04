@@ -52,7 +52,7 @@ namespace Nethereum.Hex.HexConvertors.Extensions
             return ToHex(value).TrimStart('0');
         }
 
-        public static byte[] HexToByteArray(this string value)
+        private static byte[] HexToByteArrayInternal(string value)
         {
             byte[] bytes = null;
             if (string.IsNullOrEmpty(value))
@@ -95,6 +95,18 @@ namespace Nethereum.Hex.HexConvertors.Extensions
             return bytes;
         }
 
+        public static byte[] HexToByteArray(this string value)
+        {
+            try {
+                return HexToByteArrayInternal(value);
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException(string.Format(
+                    "String '{0}' could not be converted to byte array (not hex?).", value), ex);
+            }
+        }
+
         private static byte FromCharacterToByte(char character, int index, int shift = 0)
         {
             var value = (byte) character;
@@ -112,7 +124,7 @@ namespace Nethereum.Hex.HexConvertors.Extensions
             }
             else
             {
-                throw new InvalidOperationException(string.Format(
+                throw new FormatException(string.Format(
                     "Character '{0}' at index '{1}' is not valid alphanumeric character.", character, index));
             }
 

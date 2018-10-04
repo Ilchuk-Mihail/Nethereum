@@ -18,16 +18,16 @@ namespace Nethereum.Generators.Service
         {
             return
                 $@"
-{SpaceUtils.OneTab}public class {Model.GetTypeName()}
+{SpaceUtils.OneTab}public partial class {Model.GetTypeName()}
 {SpaceUtils.OneTab}{{
 {SpaceUtils.OneTab}
 {_deploymentServiceMethodsCSharpTemplate.GenerateMethods()}
 {SpaceUtils.OneTab}
-{SpaceUtils.TwoTabs}protected Web3 Web3{{ get; }}
+{SpaceUtils.TwoTabs}protected Nethereum.Web3.Web3 Web3{{ get; }}
 {SpaceUtils.TwoTabs}
-{SpaceUtils.TwoTabs}protected ContractHandler ContractHandler {{ get; }}
+{SpaceUtils.TwoTabs}public ContractHandler ContractHandler {{ get; }}
 {SpaceUtils.TwoTabs}
-{SpaceUtils.TwoTabs}public {Model.GetTypeName()}(Web3 web3, string contractAddress)
+{SpaceUtils.TwoTabs}public {Model.GetTypeName()}(Nethereum.Web3.Web3 web3, string contractAddress)
 {SpaceUtils.TwoTabs}{{
 {SpaceUtils.ThreeTabs}Web3 = web3;
 {SpaceUtils.ThreeTabs}ContractHandler = web3.Eth.GetContractHandler(contractAddress);

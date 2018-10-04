@@ -1,6 +1,6 @@
 rem packing web3 and dependencies
 del /S *.*.nupkg
-SET releaseSuffix=
+SET releaseSuffix=rc1
 SET targetNet35=false
 
 cd Nethereum.Hex
@@ -32,6 +32,10 @@ CALL :restorepack
 cd ..
 
 cd Nethereum.JsonRpc.RpcClient*
+CALL :restorepack
+cd ..
+
+cd Nethereum.JsonRpc.WebSocketClient*
 CALL :restorepack
 cd ..
 
@@ -93,5 +97,5 @@ EXIT /B %ERRORLEVEL%
 
 :restorepack
 dotnet restore /property:ReleaseSuffix=%releaseSuffix% /property:TargetNet35=%targetNet35%
-dotnet pack /property:TargetNet35=%targetNet35%
+dotnet pack -c Release /property:TargetNet35=%targetNet35% /property:ReleaseSuffix=%releaseSuffix%
 EXIT /B 0

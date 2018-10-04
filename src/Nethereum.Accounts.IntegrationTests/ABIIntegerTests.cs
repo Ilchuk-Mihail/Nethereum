@@ -1,14 +1,15 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Threading.Tasks;
 using Common.Logging;
 using Common.Logging.Simple;
 using Nethereum.ABI;
 using Nethereum.ABI.FunctionEncoding.Attributes;
+using Nethereum.Contracts;
 using Nethereum.Contracts.CQS;
 using Nethereum.JsonRpc.Client;
 using Nethereum.XUnitEthereumClients;
 using Xunit;
+using static Nethereum.Accounts.IntegrationTests.ABIIntegerTests;
 
 namespace Nethereum.Accounts.IntegrationTests
 {
@@ -65,7 +66,7 @@ namespace Nethereum.Accounts.IntegrationTests
 */
 
 
-        private readonly EthereumClientIntegrationFixture _ethereumClientIntegrationFixture;
+    private readonly EthereumClientIntegrationFixture _ethereumClientIntegrationFixture;
 
         public ABIIntegerTests(EthereumClientIntegrationFixture ethereumClientIntegrationFixture)
         {
@@ -85,25 +86,25 @@ namespace Nethereum.Accounts.IntegrationTests
         }
 
         [Function("MaxUint", "uint256")]
-        public class MaxFunction : ContractMessage
+        public class MaxFunction : FunctionMessage
         {
 
         }
 
         [Function("MaxInt256", "int256")]
-        public class MaxInt256Function : ContractMessage
+        public class MaxInt256Function : FunctionMessage
         {
 
         }
 
         [Function("MinInt256", "int256")]
-        public class MinInt256Function : ContractMessage
+        public class MinInt256Function : FunctionMessage
         {
 
         }
 
         [Function("UnderflowInt256ByQuantity", "int256")]
-        public class UnderflowInt256ByQuantityFunction : ContractMessage
+        public class UnderflowInt256ByQuantityFunction : FunctionMessage
         {
             [Parameter("int256", "value", 1)]
             public BigInteger Value { get; set; }
@@ -112,7 +113,7 @@ namespace Nethereum.Accounts.IntegrationTests
         }
 
         [Function("OverflowInt256ByQuantity", "int256")]
-        public class OverflowInt256ByQuantityFunction : ContractMessage
+        public class OverflowInt256ByQuantityFunction : FunctionMessage
         {
             [Parameter("int256", "value", 1)]
             public BigInteger Value { get; set; }
@@ -121,7 +122,7 @@ namespace Nethereum.Accounts.IntegrationTests
         }
 
         [Function("OverflowUInt256ByQuantity", "uint256")]
-        public class OverflowUInt256ByQuantityFunction : ContractMessage
+        public class OverflowUInt256ByQuantityFunction : FunctionMessage
         {
             [Parameter("uint256", "value", 1)]
             public BigInteger Value { get; set; }
@@ -134,7 +135,7 @@ namespace Nethereum.Accounts.IntegrationTests
         {
             var capturingLoggerAdapter = new CapturingLoggerFactoryAdapter();
             LogManager.Adapter = capturingLoggerAdapter;
-
+            
             var web3 = GetWeb3();
             var deploymentReceipt = await web3.Eth.GetContractDeploymentHandler<TestDeployment>()
                 .SendRequestAndWaitForReceiptAsync();
@@ -151,10 +152,12 @@ namespace Nethereum.Accounts.IntegrationTests
             var capturingLoggerAdapter = new CapturingLoggerFactoryAdapter();
             LogManager.Adapter = capturingLoggerAdapter;
 
+            
             var web3 = GetWeb3();
             var deploymentReceipt = await web3.Eth.GetContractDeploymentHandler<TestDeployment>()
                 .SendRequestAndWaitForReceiptAsync();
             var contractHandler = web3.Eth.GetContractHandler(deploymentReceipt.ContractAddress);
+
             var result = await contractHandler.QueryAsync<MaxInt256Function, BigInteger>();
             Assert.Equal(result, BigInteger.Parse("57896044618658097711785492504343953926634992332820282019728792003956564819967"));
             Assert.Equal("RPC Response: 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
